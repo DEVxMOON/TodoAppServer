@@ -13,5 +13,8 @@ data class UserResponse(
             name = user.name,
             email = user.email,
         )
+        fun from(users: List<User>): List<UserResponse> {
+            return users.map { from(it) }
+        }
     }
 }

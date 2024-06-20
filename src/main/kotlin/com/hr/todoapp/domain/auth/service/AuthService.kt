@@ -1,13 +1,11 @@
 package com.hr.todoapp.domain.auth.service
 
 import com.hr.todoapp.domain.auth.dto.LoginRequest
-import com.hr.todoapp.domain.auth.dto.PasswordChangeRequest
 import com.hr.todoapp.domain.auth.dto.SignUpRequest
 import com.hr.todoapp.domain.user.dto.UserResponse
 import com.hr.todoapp.domain.user.entity.User
 import com.hr.todoapp.domain.user.repository.UserRepository
 import com.hr.todoapp.infra.security.jwt.JwtPlugin
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -46,20 +44,4 @@ class AuthService(
         )
     }
 
-    fun passwordChange(request: PasswordChangeRequest,userId:Long): String {
-        val user = userRepository.findByIdOrNull(userId) ?: throw Exception("User with id $userId not found.")
-
-        val newPasswordEncoder = passwordEncoder.encode(request.newPw)
-
-        if(!passwordEncoder.matches(request.oldPw, user.pw)) {
-            throw Exception("User with id ${user.id} does not match password.")
-        }
-        if(passwordEncoder.matches(request.newPw,request.oldPw)){
-            throw Exception("Password does not changed")
-        }
-
-        user.pw = newPasswordEncoder
-
-        return "Password Changed Successfully!"
-    }
 }

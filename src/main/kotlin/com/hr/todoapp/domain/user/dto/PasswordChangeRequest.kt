@@ -1,4 +1,4 @@
-package com.hr.todoapp.domain.auth.dto
+package com.hr.todoapp.domain.user.dto
 
 data class PasswordChangeRequest(
     val oldPw: String,

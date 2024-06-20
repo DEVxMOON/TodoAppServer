@@ -1,7 +1,6 @@
 package com.hr.todoapp.domain.auth.controller
 
 import com.hr.todoapp.domain.auth.dto.LoginRequest
-import com.hr.todoapp.domain.auth.dto.PasswordChangeRequest
 import com.hr.todoapp.domain.auth.dto.SignUpRequest
 import com.hr.todoapp.domain.auth.service.AuthService
 import com.hr.todoapp.domain.user.dto.UserResponse
@@ -27,13 +26,4 @@ class AuthController (private val authService: AuthService) {
             .body(authService.login(loginRequest))
     }
 
-    @PatchMapping("/password-change")
-    fun changePassword(
-        @RequestBody passwordChangeRequest: PasswordChangeRequest,
-        @RequestBody userId :Long,
-    ):ResponseEntity<String>{
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(authService.passwordChange(passwordChangeRequest, userId))
-    }
 }
