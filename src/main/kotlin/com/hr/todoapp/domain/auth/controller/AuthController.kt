@@ -21,7 +21,7 @@ class AuthController (private val authService: AuthService) {
     }
 
     @PostMapping("/login")
-    fun login( @RequestBody loginRequest: LoginRequest): ResponseEntity<UserResponse>{
+    fun login( @RequestBody loginRequest: LoginRequest): ResponseEntity<String>{
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(authService.login(loginRequest))
@@ -29,10 +29,11 @@ class AuthController (private val authService: AuthService) {
 
     @PatchMapping("/password-change")
     fun changePassword(
-        @RequestBody passwordChangeRequest: PasswordChangeRequest
+        @RequestBody passwordChangeRequest: PasswordChangeRequest,
+        @RequestBody userId :Long,
     ):ResponseEntity<String>{
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(authService.passwordChange(passwordChangeRequest))
+            .body(authService.passwordChange(passwordChangeRequest, userId))
     }
 }
