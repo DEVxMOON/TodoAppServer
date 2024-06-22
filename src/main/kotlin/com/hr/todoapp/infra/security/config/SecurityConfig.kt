@@ -27,7 +27,8 @@ class SecurityConfig(
                     "/auth/**",
                     "/oauth/**",
                     "/swagger-ui/**",
-                    "v3/api-docs/**",
+                    "/v3/api-docs/**",
+                    "/"
                 ).permitAll().anyRequest().permitAll()
             }.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling{

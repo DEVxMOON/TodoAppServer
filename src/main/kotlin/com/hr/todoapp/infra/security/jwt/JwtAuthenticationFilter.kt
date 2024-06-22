@@ -4,13 +4,13 @@ import com.hr.todoapp.infra.security.UserPrincipal
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
+import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
-@Configuration
+@Component
 class JwtAuthenticationFilter(
     private val jwtPlugin: JwtPlugin
 ) : OncePerRequestFilter() {
@@ -29,12 +29,12 @@ class JwtAuthenticationFilter(
         if (jwt != null) {
             jwtPlugin.validateAccessToken(jwt)
                 .onSuccess {
-                    val id = it.payload.subject.toLong()
+                    val userId = it.payload.subject.toLong()
                     val role = it.payload.get("role", String::class.java)
                     val email = it.payload.get("email", String::class.java)
 
                     val principal = UserPrincipal(
-                        id = id,
+                        id = userId,
                         email = email,
                         roles = setOf(role)
                     )
@@ -46,6 +46,8 @@ class JwtAuthenticationFilter(
                     SecurityContextHolder.getContext().authentication = authentication
                 }
         }
+
+        filterChain.doFilter(request, response)
     }
 
     private fun HttpServletRequest.getBearerToken(): String? {

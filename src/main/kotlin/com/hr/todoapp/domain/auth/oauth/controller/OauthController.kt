@@ -1,5 +1,6 @@
 package com.hr.todoapp.domain.auth.oauth.controller
 
+import com.hr.todoapp.domain.auth.dto.TokenResponse
 import com.hr.todoapp.domain.auth.oauth.service.OAuthClientService
 import com.hr.todoapp.domain.auth.oauth.service.OauthLoginService
 import com.hr.todoapp.domain.auth.oauth.type.OAuthProviderConverter
@@ -28,7 +29,7 @@ class OauthController(
     fun callback(
         @PathVariable provider: String,
         @RequestParam code: String,
-    ):String{
+    ): TokenResponse {
         val oAuthProvider = oAuthProviderConverter.convert(provider)
         return oAuthLoginService.login(oAuthProvider, code)
     }
