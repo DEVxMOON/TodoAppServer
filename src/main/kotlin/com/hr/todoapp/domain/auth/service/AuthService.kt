@@ -2,6 +2,7 @@ package com.hr.todoapp.domain.auth.service
 
 import com.hr.todoapp.domain.auth.dto.LoginRequest
 import com.hr.todoapp.domain.auth.dto.SignUpRequest
+import com.hr.todoapp.domain.auth.dto.TokenResponse
 import com.hr.todoapp.domain.user.dto.UserResponse
 import com.hr.todoapp.domain.user.entity.User
 import com.hr.todoapp.domain.user.repository.UserRepository
@@ -29,7 +30,7 @@ class AuthService(
         return UserResponse.from(user)
     }
 
-    fun login(loginRequest: LoginRequest): String {
+    fun login(loginRequest: LoginRequest): TokenResponse {
         val user = userRepository.findByEmail(loginRequest.email)
             ?: throw Exception("User with email ${loginRequest.email} not found.")
 
@@ -37,11 +38,18 @@ class AuthService(
             throw Exception("User with email ${loginRequest.email} does not match password.")
         }
 
-        return jwtPlugin.generateAccessToken(
+        return generateToken(user)
+    }
+
+    fun generateToken(user:User): TokenResponse {
+        val accessToken = jwtPlugin.generateAccessToken(
             subject = user.id.toString(),
             email = user.email,
             role = "User"
         )
+
+        userRepository.save(user)
+        return TokenResponse(token = accessToken)
     }
 
 }

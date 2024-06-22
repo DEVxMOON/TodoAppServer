@@ -2,6 +2,7 @@ package com.hr.todoapp.domain.auth.controller
 
 import com.hr.todoapp.domain.auth.dto.LoginRequest
 import com.hr.todoapp.domain.auth.dto.SignUpRequest
+import com.hr.todoapp.domain.auth.dto.TokenResponse
 import com.hr.todoapp.domain.auth.service.AuthService
 import com.hr.todoapp.domain.user.dto.UserResponse
 import org.springframework.http.HttpStatus
@@ -20,7 +21,7 @@ class AuthController (private val authService: AuthService) {
     }
 
     @PostMapping("/login")
-    fun login( @RequestBody loginRequest: LoginRequest): ResponseEntity<String>{
+    fun login( @RequestBody loginRequest: LoginRequest): ResponseEntity<TokenResponse>{
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(authService.login(loginRequest))
