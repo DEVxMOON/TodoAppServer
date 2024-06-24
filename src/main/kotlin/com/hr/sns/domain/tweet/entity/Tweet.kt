@@ -1,13 +1,15 @@
 package com.hr.sns.domain.tweet.entity
 
+import com.hr.sns.domain.user.entity.User
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "tweets")
 class Tweet (
-    @Column(name = "user_id",nullable = false)
-    val userId: String,
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    val user: User,
 
     @Column(name = "tweet", nullable = false)
     var tweet: String,
