@@ -27,6 +27,19 @@ class TweetService(
         return TweetResponse.from(tweet)
     }
 
+    fun createMention(id:Long,tweetRequest: TweetRequest,userId: Long): TweetResponse {
+        val user = userRepository.findByIdOrNull(userId) ?: throw Exception("User not found")
+        val tweet = Tweet(
+            user =user,
+            tweet = tweetRequest.tweet,
+            views = 0,
+            createdAt = tweetRequest.createdAt,
+            tweetId = id,
+        )
+        tweetRepository.save(tweet)
+        return TweetResponse.from(tweet)
+    }
+
     fun deleteTweet(id: Long, userId:Long) {
         val tweet = tweetRepository.findByIdOrNull(id)?: throw Exception("Tweet not found")
         if(tweet.user.id!= userId) throw Exception("User not match")

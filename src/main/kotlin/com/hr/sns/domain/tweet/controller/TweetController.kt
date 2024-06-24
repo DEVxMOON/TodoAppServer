@@ -24,6 +24,18 @@ class TweetController(private val tweetService: TweetService) {
             .status(HttpStatus.CREATED)
             .body(tweetService.createTweet(tweetRequest,user.id))
     }
+    @PostMapping("/{id}")
+    fun createMention(
+        @PathVariable id: Long,
+        @RequestBody tweetRequest: TweetRequest,
+        authentication: Authentication,
+    ):ResponseEntity<TweetResponse>{
+        val user = authentication.principal as UserPrincipal
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(tweetService.createMention(id,tweetRequest,user.id))
+    }
+
     //트윗 삭제
     @DeleteMapping("/{id}")
     fun deleteTweet(
@@ -36,7 +48,7 @@ class TweetController(private val tweetService: TweetService) {
             .body(tweetService.deleteTweet(id, user.id))
     }
 
-    //트윗 전체보기
+    //트윗 전체보기 - 페이지네이션 적용
     @GetMapping("/home")
     fun home():ResponseEntity<List<TweetResponse>> {
         return ResponseEntity
