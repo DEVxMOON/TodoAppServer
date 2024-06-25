@@ -36,9 +36,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     implementation("org.springframework.boot:spring-boot-starter-security")
-
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
 
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
@@ -66,4 +68,10 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+kapt {
+    arguments {
+        arg("querydsl.entityAccessors", "true")
+    }
 }
