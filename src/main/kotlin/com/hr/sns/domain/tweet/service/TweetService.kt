@@ -6,6 +6,8 @@ import com.hr.sns.domain.tweet.entity.QTweet
 import com.hr.sns.domain.tweet.entity.Tweet
 import com.hr.sns.domain.tweet.repository.TweetRepository
 import com.hr.sns.domain.user.repository.UserRepository
+import com.hr.sns.exception.TweetNotFoundException
+import com.hr.sns.exception.UserNotFoundException
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager
 import org.springframework.data.domain.Page
@@ -22,7 +24,7 @@ class TweetService(
     private val entityManager: EntityManager,
 ) {
     fun createTweet(tweetRequest: TweetRequest, userId: Long): TweetResponse {
-        val user = userRepository.findByIdOrNull(userId) ?: throw Exception("User not found")
+        val user = userRepository.findByIdOrNull(userId) ?: throw UserNotFoundException("User not found")
         val tweet = Tweet(
             user =user,
             tweet = tweetRequest.tweet,
@@ -36,7 +38,7 @@ class TweetService(
     }
 
     fun createMention(id:Long,tweetRequest: TweetRequest,userId: Long): TweetResponse {
-        val user = userRepository.findByIdOrNull(userId) ?: throw Exception("User not found")
+        val user = userRepository.findByIdOrNull(userId) ?: throw UserNotFoundException("User not found")
         val tweet = Tweet(
             user =user,
             tweet = tweetRequest.tweet,
@@ -49,7 +51,7 @@ class TweetService(
     }
 
     fun deleteTweet(id: Long, userId:Long) {
-        val tweet = tweetRepository.findByIdOrNull(id)?: throw Exception("Tweet not found")
+        val tweet = tweetRepository.findByIdOrNull(id)?: throw TweetNotFoundException("Tweet not found")
         if(tweet.user.id!= userId) throw Exception("User not match")
         tweetRepository.delete(tweet)
     }
@@ -71,7 +73,7 @@ class TweetService(
     }
 
     fun getTweetById(id: Long): TweetResponse {
-        val tweet = tweetRepository.findByIdOrNull(id)?: throw Exception("Tweet not found")
+        val tweet = tweetRepository.findByIdOrNull(id)?: throw TweetNotFoundException("Tweet not found")
         return TweetResponse.from(tweet)
     }
 

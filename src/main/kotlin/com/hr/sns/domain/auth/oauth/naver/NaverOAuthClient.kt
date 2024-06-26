@@ -4,6 +4,7 @@ import com.hr.sns.domain.auth.oauth.client.OAuthClient
 import com.hr.sns.domain.auth.oauth.naver.dto.NaverOAuthUserInfo
 import com.hr.sns.domain.auth.oauth.naver.dto.NaverTokenResponse
 import com.hr.sns.domain.auth.oauth.type.OAuthProvider
+import com.hr.sns.exception.OAuthException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
@@ -46,11 +47,11 @@ class NaverOAuthClient(
             .body(LinkedMultiValueMap<String, String>().apply { this.setAll(requestData) })
             .retrieve()
             .onStatus(HttpStatusCode::isError) { _, response ->
-                throw Exception("NAVER: ${response.statusCode}")
+                throw OAuthException("NAVER: ${response.statusCode}")
             }
             .body<NaverTokenResponse>()
             ?.accessToken
-            ?: throw Exception("NAVER")
+            ?: throw OAuthException("NAVER")
 
     }
 
@@ -61,14 +62,13 @@ class NaverOAuthClient(
             .header("Authorization", "Bearer $accessToken")
             .retrieve()
             .onStatus(HttpStatusCode::isError) { _, response ->
-                throw Exception("NAVER: ${response.statusCode}")
+                throw OAuthException("NAVER: ${response.statusCode}")
             }
             .body<NaverOAuthUserInfo>()
-            ?: throw Exception("NAVER")
+            ?: throw OAuthException("NAVER")
     }
 
     override fun supports(provider: OAuthProvider): Boolean {
         return provider == OAuthProvider.NAVER
     }
-
 }

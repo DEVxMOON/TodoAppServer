@@ -6,6 +6,8 @@ import com.hr.sns.domain.user.dto.UpdateUserRequest
 import com.hr.sns.domain.user.dto.UserResponse
 import com.hr.sns.domain.user.entity.User
 import com.hr.sns.domain.user.repository.UserRepository
+import com.hr.sns.exception.InvalidPasswordException
+import com.hr.sns.exception.UserNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -21,25 +23,25 @@ class UserService(
     }
 
     fun getUserById(id: Long): UserResponse {
-        val user = userRepository.findByIdOrNull(id) ?: throw Exception("User not found")
+        val user = userRepository.findByIdOrNull(id) ?: throw UserNotFoundException("User not found")
         return UserResponse.from(user)
     }
 
     fun updateUserById(id: Long, request: UpdateUserRequest): UserResponse {
-        val user = userRepository.findByIdOrNull(id) ?: throw Exception("User not found")
+        val user = userRepository.findByIdOrNull(id) ?: throw UserNotFoundException("User not found")
         user.name = request.name
         //변경할 사항들 생길시 이곳에 추가
         return UserResponse.from(user)
     }
 
     fun changePassword(request: PasswordChangeRequest, userId: Long): String {
-        val user = userRepository.findByIdOrNull(userId) ?: throw Exception("User with id $userId not found.")
+        val user = userRepository.findByIdOrNull(userId) ?: throw UserNotFoundException("User with id $userId not found.")
         val newPasswordEncoder = passwordEncoder.encode(request.newPw)
         if (!passwordEncoder.matches(request.oldPw, user.pw)) {
-            throw Exception("User with id ${user.id} does not match password.")
+            throw InvalidPasswordException("User with id ${user.id} does not match password.")
         }
         if (passwordEncoder.matches(request.newPw, request.oldPw)) {
-            throw Exception("Password does not changed")
+            throw InvalidPasswordException("Password does not changed")
         }
 
         user.pw = newPasswordEncoder
@@ -48,7 +50,7 @@ class UserService(
     }
 
     fun delete(id: Long): String {
-        val user = userRepository.findByIdOrNull(id) ?: throw Exception("User not found.")
+        val user = userRepository.findByIdOrNull(id) ?: throw UserNotFoundException("User not found.")
         userRepository.delete(user)
         return "Deleted Successfully!"
     }

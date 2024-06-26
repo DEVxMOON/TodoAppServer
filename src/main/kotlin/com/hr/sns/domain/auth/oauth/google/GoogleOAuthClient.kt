@@ -4,6 +4,7 @@ import com.hr.sns.domain.auth.oauth.client.OAuthClient
 import com.hr.sns.domain.auth.oauth.google.dto.GoogleOAuthUserInfo
 import com.hr.sns.domain.auth.oauth.google.dto.GoogleTokenResponse
 import com.hr.sns.domain.auth.oauth.type.OAuthProvider
+import com.hr.sns.exception.OAuthException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
@@ -47,11 +48,11 @@ class GoogleOAuthClient(
             .body(LinkedMultiValueMap<String, String>().apply { this.setAll(requestData) })
             .retrieve()
             .onStatus(HttpStatusCode::isError) { _, response ->
-                throw Exception("GOOGLE: ${response.statusCode}")
+                throw OAuthException("GOOGLE: ${response.statusCode}")
             }
             .body<GoogleTokenResponse>()
             ?.accessToken
-            ?: throw Exception("GOOGLE")
+            ?: throw OAuthException("GOOGLE")
 
     }
 
@@ -62,10 +63,10 @@ class GoogleOAuthClient(
             .header("Authorization", "Bearer $accessToken")
             .retrieve()
             .onStatus(HttpStatusCode::isError) { _, response ->
-                throw  Exception("GOOGLE: ${response.statusCode}")
+                throw  OAuthException("GOOGLE: ${response.statusCode}")
             }
             .body<GoogleOAuthUserInfo>()
-            ?: throw  Exception("GOOGLE")
+            ?: throw  OAuthException("GOOGLE")
     }
 
     override fun supports(provider: OAuthProvider): Boolean {

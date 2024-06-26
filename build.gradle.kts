@@ -39,6 +39,7 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    implementation ("org.springframework.boot:spring-boot-starter-aop")
 
     kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
 

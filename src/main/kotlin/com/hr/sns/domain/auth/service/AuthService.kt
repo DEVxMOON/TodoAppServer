@@ -6,6 +6,9 @@ import com.hr.sns.domain.auth.dto.TokenResponse
 import com.hr.sns.domain.user.dto.UserResponse
 import com.hr.sns.domain.user.entity.User
 import com.hr.sns.domain.user.repository.UserRepository
+import com.hr.sns.exception.InvalidPasswordException
+import com.hr.sns.exception.UserAlreadyExistsException
+import com.hr.sns.exception.UserNotFoundException
 import com.hr.sns.infra.security.jwt.JwtPlugin
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -18,7 +21,7 @@ class AuthService(
 ) {
     fun register(signUpRequest: SignUpRequest): UserResponse {
         if (userRepository.existsByEmail(signUpRequest.email)) {
-            throw Exception("User with email ${signUpRequest.email} already exists.")
+            throw UserAlreadyExistsException("User with email ${signUpRequest.email} already exists.")
         }
 
         val user = User(
@@ -32,10 +35,10 @@ class AuthService(
 
     fun login(loginRequest: LoginRequest): TokenResponse {
         val user = userRepository.findByEmail(loginRequest.email)
-            ?: throw Exception("User with email ${loginRequest.email} not found.")
+            ?: throw UserNotFoundException("User with email ${loginRequest.email} not found.")
 
         if (!passwordEncoder.matches(loginRequest.pw, user.pw)) {
-            throw Exception("User with email ${loginRequest.email} does not match password.")
+            throw InvalidPasswordException("User with email ${loginRequest.email} does not match password.")
         }
 
         return generateToken(user)
