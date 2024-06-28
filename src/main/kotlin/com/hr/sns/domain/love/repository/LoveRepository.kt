@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface LoveRepository: JpaRepository<Love, Long>{
     fun findByTweetId(tweetId: Long): List<Love>
-    fun findByUserEmail(userEmail: String): List<Love>
+    fun findByEmail(email: String): List<Love>
 }

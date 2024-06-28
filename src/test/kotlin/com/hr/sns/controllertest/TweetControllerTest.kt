@@ -186,7 +186,7 @@ class TweetControllerTest : BehaviorSpec({
                 every { tweetService.searchTweets(any(), any(), any()) } throws IllegalArgumentException("Invalid search keyword")
 
                 val response = tweetController.searchTweets("", 0, 5)
-                response shouldBe PageImpl<TweetResponse>(emptyList())
+                response shouldBe PageImpl(emptyList())
             }
         }
     }

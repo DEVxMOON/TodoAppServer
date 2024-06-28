@@ -10,13 +10,13 @@ data class LoveResponse (
     companion object{
         fun from(love : Love) = LoveResponse(
             email=love.email,
-            tweetId = love.tweet,
+            tweetId = love.tweet.id!!,
             id = love.id!!
         )
         fun from(loves: List<Love>) = loves.map { love ->
             LoveResponse(
                 email = love.email,
-                tweetId = love.tweet,
+                tweetId = love.tweet.id!!,
                 id = love.id!!
             )
         }
