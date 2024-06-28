@@ -52,6 +52,6 @@ class LoveController(
         val user = authentication.principal as UserPrincipal
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(loveService.getLoveTweets(user.id))
+            .body(loveService.getLoveTweets(user.email))
     }
 }

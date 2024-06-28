@@ -20,7 +20,7 @@ class LoveService (
 
         val love= Love(
             email = userEmail,
-            tweet = tweet,
+            tweet = tweetId,
         )
         loveRepository.save(love)
         return LoveResponse.from(love)
@@ -37,8 +37,8 @@ class LoveService (
         return LoveResponse.from(loves)
     }
 
-    fun getLoveTweets(userId:Long): List<LoveResponse>{
-        val loves = loveRepository.findByUserId(userId)
+    fun getLoveTweets(userEmail:String): List<LoveResponse>{
+        val loves = loveRepository.findByUserEmail(userEmail)
         return LoveResponse.from(loves)
     }
 }
