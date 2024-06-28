@@ -5,18 +5,18 @@ import com.hr.sns.domain.love.entity.Love
 data class LoveResponse (
     val id:Long,
     val email :String,
-    val feedId:Long
+    val tweetId:Long
 ){
     companion object{
         fun from(love : Love) = LoveResponse(
             email=love.email,
-            feedId = love.tweet.tweetId!!,
+            tweetId = love.tweet.tweetId!!,
             id = love.id!!
         )
         fun from(loves: List<Love>) = loves.map { love ->
             LoveResponse(
                 email = love.email,
-                feedId = love.tweet.tweetId!!,
+                tweetId = love.tweet.tweetId!!,
                 id = love.id!!
             )
         }

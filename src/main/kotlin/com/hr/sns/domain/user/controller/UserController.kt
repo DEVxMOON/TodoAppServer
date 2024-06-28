@@ -4,7 +4,9 @@ import com.hr.sns.domain.user.dto.PasswordChangeRequest
 import com.hr.sns.domain.user.dto.UpdateUserRequest
 import com.hr.sns.domain.user.dto.UserResponse
 import com.hr.sns.domain.user.service.UserService
+import com.hr.sns.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.Authentication
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -26,27 +28,30 @@ class UserController(private val userService: UserService) {
             .body(userService.getUserById(id))
     }
 
-    @PutMapping("/{id}")
-    fun updateUserById(@PathVariable id: Long, @RequestBody updateUserRequest: UpdateUserRequest): ResponseEntity<UserResponse> {
+    @PutMapping
+    fun updateUserById(authentication:Authentication, @RequestBody updateUserRequest: UpdateUserRequest): ResponseEntity<UserResponse> {
+        val user = authentication.principal as UserPrincipal
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(userService.updateUserById(id, updateUserRequest))
+            .body(userService.updateUserById(user.id, updateUserRequest))
     }
 
-    @PatchMapping("/{id}/password-change")
+    @PatchMapping("/password-change")
     fun changePassword(
         @RequestBody passwordChangeRequest: PasswordChangeRequest,
-        @PathVariable id :Long,
+        authentication:Authentication,
     ):ResponseEntity<String>{
+        val user = authentication.principal as UserPrincipal
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(userService.changePassword(passwordChangeRequest, id))
+            .body(userService.changePassword(passwordChangeRequest, user.id))
     }
 
-    @DeleteMapping("/{id}")
-    fun deleteUserById(@PathVariable id: Long): ResponseEntity<String> {
+    @DeleteMapping
+    fun deleteUserById(authentication:Authentication): ResponseEntity<String> {
+        val user = authentication.principal as UserPrincipal
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
-            .body(userService.delete(id))
+            .body(userService.delete(user.id))
     }
 }
