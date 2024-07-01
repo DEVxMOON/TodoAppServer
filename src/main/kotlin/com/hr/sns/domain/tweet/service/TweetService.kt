@@ -92,11 +92,9 @@ class TweetService(
             .limit(pageable.pageSize.toLong())
 
         val tweets = query.fetch()
-
         val tweetResponses = tweets.map { TweetResponse.from(it) }
 
-        val totalQuery = queryFactory.selectFrom(tweet).where(predicate)
-        val total = totalQuery.fetch().size.toLong()
+        val total = queryFactory.selectFrom(tweet).where(predicate).fetchCount()
 
         return PageImpl(tweetResponses, pageable, total)
     }

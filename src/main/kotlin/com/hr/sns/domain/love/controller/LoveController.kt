@@ -9,11 +9,10 @@ import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/love")
 class LoveController(
     private val loveService: LoveService
 ) {
-    @PostMapping
+    @PostMapping("/love")
     fun addLove(
         tweetId: Long,
         authentication: Authentication,
@@ -24,7 +23,7 @@ class LoveController(
             .body(loveService.addLove(tweetId, user.email))
     }
 
-    @DeleteMapping
+    @DeleteMapping("/love")
     fun removeLove(
         tweetId: Long,
         authentication: Authentication
@@ -35,7 +34,7 @@ class LoveController(
             .body(loveService.deleteLove(tweetId,user.email))
     }
 
-    @GetMapping("/tweet/{id}/loves")
+    @GetMapping("/tweets/{id}/loves")
     fun getLoveWithUser(
         @PathVariable id: Long,
     ):ResponseEntity<List<LoveResponse>> {
